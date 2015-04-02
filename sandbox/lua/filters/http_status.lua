@@ -55,6 +55,11 @@ local title             = "HTTP Status"
 local rows              = read_config("rows") or 1440
 local sec_per_row       = read_config("sec_per_row") or 60
 local anomaly_config    = anomaly.parse_config(read_config("anomaly_config"))
+local alert_throttle    = read_config("alert_throttle") or nil
+if alert_throttle then
+    alert.set_throttle(alert_throttle * 1e9)
+end
+
 annotation.set_prune(title, rows * sec_per_row * 1e9)
 
 status = circular_buffer.new(rows, 6, sec_per_row)
